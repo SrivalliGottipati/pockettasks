@@ -4,6 +4,7 @@ import '../state/tasks_controller.dart';
 import '../widgets/progress_ring.dart';
 import '../widgets/gradient_button.dart';
 import '../theme/app_colors.dart';
+import '../utils/screen_utils.dart';
 
 class HomeScreen extends StatefulWidget {
   final TasksController controller;
@@ -60,15 +61,15 @@ class _HomeScreenState extends State<HomeScreen> {
       filled: true,
       fillColor: AppColors.inputFill,
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(context.responsivePadding * 0.9),
         borderSide: const BorderSide(color: AppColors.inputBorderEnabled),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(context.responsivePadding * 0.9),
         borderSide: const BorderSide(color: AppColors.blueAccent),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(context.responsivePadding * 0.9),
         borderSide: const BorderSide(color: Colors.redAccent),
       ),
     );
@@ -83,22 +84,35 @@ class _HomeScreenState extends State<HomeScreen> {
             end: Alignment.bottomRight,
           ),
         ),
-        padding: const EdgeInsets.fromLTRB(20, 52, 20, 0),
+        padding: EdgeInsets.fromLTRB(
+          context.responsivePadding, 
+          context.responsivePadding * 2.6, 
+          context.responsivePadding, 
+          0
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                ProgressRing(done: c.doneCount, total: c.totalCount, size: 76),
-                const SizedBox(width: 16),
+                ProgressRing(
+                  done: c.doneCount, 
+                  total: c.totalCount, 
+                  size: context.responsiveProgressSize
+                ),
+                SizedBox(width: context.responsiveSpacing),
                 Text('PocketTasks',
                     style: Theme.of(context)
                         .textTheme
                         .headlineMedium
-                        ?.copyWith(fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
+                        ?.copyWith(
+                          fontWeight: FontWeight.w800, 
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveTitleSize,
+                        )),
               ],
             ),
-            const SizedBox(height: 18),
+            SizedBox(height: context.responsiveSpacing * 1.5),
             Row(
               children: [
                 Expanded(
@@ -109,27 +123,33 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: const TextStyle(color: AppColors.textPrimary),
                   ),
                 ),
-                const SizedBox(width: 12),
-                GradientButton(onPressed: _handleAdd, child: const Text('Add')),
+                SizedBox(width: context.responsiveSpacing),
+                GradientButton(
+                  onPressed: _handleAdd, 
+                  child: const Text('Add'),
+                  borderRadius: context.responsivePadding * 0.7,
+                ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: context.responsiveSpacing),
             TextField(
               controller: searchController,
-              decoration: fieldDecoration('Search').copyWith(prefixIcon: const Icon(Icons.search, color: AppColors.textMuted)),
+              decoration: fieldDecoration('Search').copyWith(
+                prefixIcon: Icon(Icons.search, color: AppColors.textMuted)
+              ),
               onChanged: c.setQueryDebounced,
               style: const TextStyle(color: AppColors.textPrimary),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: context.responsiveSpacing),
             Wrap(
-              spacing: 12,
+              spacing: context.responsiveChipSpacing,
               children: [
                 _chip('All', TaskFilter.all),
                 _chip('Active', TaskFilter.active),
                 _chip('Done', TaskFilter.done),
               ],
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: context.responsiveSpacing * 0.33),
             Expanded(
               child: ListView.builder(
                 padding: EdgeInsets.zero,
@@ -171,20 +191,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     },
                     child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 0, 
+                        vertical: context.responsiveSpacing * 0.33
+                      ),
                       leading: Icon(
                         task.done ? Icons.check_circle_outline : Icons.radio_button_unchecked,
                         color: task.done ? AppColors.doneGreen : AppColors.textMuted,
-                        size: 28,
+                        size: context.responsiveIconSize,
                       ),
                       title: Text(
                         task.title,
                         style: TextStyle(
                           color: AppColors.textPrimary,
-                          fontSize: 18,
+                          fontSize: context.responsiveTextSize,
                           decoration: task.done ? TextDecoration.lineThrough : null,
                           decorationColor: AppColors.textPrimary,
-                          decorationThickness: 1,
+                          decorationThickness: 2,
                         ),
                       ),
                       onTap: () async {
@@ -220,12 +243,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return ChoiceChip(
       label: Text(
         label,
-        style: TextStyle(color: selected ? Colors.white : AppColors.textMuted, fontWeight: FontWeight.w600),
+        style: TextStyle(
+          color: selected ? Colors.white : AppColors.textMuted, 
+          fontWeight: FontWeight.w600,
+          fontSize: context.responsiveTextSize * 0.9,
+        ),
       ),
       selected: selected,
       selectedColor: AppColors.chipSelected,
       backgroundColor: AppColors.chipBg,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(context.responsivePadding * 1.1)
+      ),
       onSelected: (_) => c.setFilter(f),
     );
   }

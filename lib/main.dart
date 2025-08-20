@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'state/tasks_controller.dart';
 import 'screens/home_screen.dart';
+import 'utils/screen_utils.dart';
 
 void main() {
 	runApp(const PocketTasksApp());
@@ -30,9 +31,14 @@ class _PocketTasksAppState extends State<PocketTasksApp> {
 			debugShowCheckedModeBanner: false,
 			theme: baseLight,
 			darkTheme: baseDark,
-			home: AnimatedBuilder(
-				animation: controller,
-				builder: (context, _) => HomeScreen(controller: controller),
+			home: Builder(
+				builder: (context) {
+					ScreenUtils.init(context);
+					return AnimatedBuilder(
+						animation: controller,
+						builder: (context, _) => HomeScreen(controller: controller),
+					);
+				},
 			),
 		);
 	}
